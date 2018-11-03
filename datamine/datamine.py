@@ -41,7 +41,7 @@ class Datamine(BaseCog):
             distance_list.append(distance(search, x))
         best = min(distance_list)
         position = distance_list.index(best)
-        key = all_keys[position]
+        key = list(all_keys)[position]
         try:
             link = await self.config.current.portraits.get_raw(key)
             await ctx.send(link)
