@@ -1,7 +1,9 @@
 from redbot.core import commands, Config
 from difflib import get_close_matches
 
-class Datamine:
+BaseCog = getattr(commands, "Cog", object)
+
+class Datamine(BaseCog):
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=4524586975)
