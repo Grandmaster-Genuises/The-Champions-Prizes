@@ -34,10 +34,10 @@ class Datamine(BaseCog):
 
     @datamine.command()
     async def portrait(self, ctx, *, search):
-        all_keys = await self.config.current.portaits.all().keys()
+        all_keys = await self.config.current.get_raw('portraits').keys()
         matches = get_close_matches(search, list(all_keys))
         try:
-            link = await self.config.current.portraits[matches[0]]
+            link = await self.config.current.portraits.get_raw(search)
             await ctx.send(link)
         except Exception as e:
             await ctx.send("No champs were found or there was an error in the process.")
