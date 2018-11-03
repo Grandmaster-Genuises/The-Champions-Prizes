@@ -1,5 +1,5 @@
 from redbot.core import commands, Config
-from difflib import get_close_matches
+from Levenshtein import distance
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -16,8 +16,8 @@ class Datamine(BaseCog):
             "current": {
                 "portraits": {
                     "nightcrawler": "https://drive.google.com/open?id=1PydQ78Mx8uUvJ2S4noBo4A8T2RCgLKVt",
-                    "Kamala Khan": "https://drive.google.com/open?id=1xeeOdtx6ybeOgKshIZvMGRPQ2o8B3kcc",
-                    "Blade": "https://drive.google.com/open?id=1-P1X5kSW4RpqtIMZ1ko6euA1Clp-Uihz"
+                    "kamala khan": "https://drive.google.com/open?id=1xeeOdtx6ybeOgKshIZvMGRPQ2o8B3kcc",
+                    "blade": "https://drive.google.com/open?id=1-P1X5kSW4RpqtIMZ1ko6euA1Clp-Uihz"
                 }
             }
         }
@@ -36,9 +36,14 @@ class Datamine(BaseCog):
     async def portrait(self, ctx, *, search):
         all_keys = await self.config.current.get_raw('portraits')
         all_keys = all_keys.keys()
-        matches = get_close_matches(search, list(all_keys), 1)
+        distance_list = []
+        for x in all_keys:
+            distance_list.append(distance(search, x))
+        best = min(distance_list)
+        position = distance_list.index(best)
+        key = all_keys[position]
         try:
-            link = await self.config.current.portraits.get_raw(search)
+            link = await self.config.current.portraits.get_raw(key)
             await ctx.send(link)
         except Exception as e:
             await ctx.send("No champs were found or there was an error in the process.")
