@@ -34,7 +34,7 @@ class Datamine(BaseCog):
 
     @datamine.command()
     async def portrait(self, ctx, *, search):
-        all_keys = await self.config.current.portaits.all()keys()
+        all_keys = await self.config.current.portaits.all().keys()
         matches = get_close_matches(search, list(all_keys))
         try:
             link = await self.config.current.portraits[matches[0]]
