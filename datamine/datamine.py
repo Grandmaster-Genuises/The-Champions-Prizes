@@ -41,7 +41,7 @@ class Datamine(BaseCog):
         results = process.extractOne(search, list(all_keys))
         try:
             link = await self.config.current.portraits.get_raw(results[0])
-            await ctx.send(link + "\n\nScore: " + results[1])
+            await ctx.send(link + "\n\nScore: " + str(results[1]))
         except Exception as e:
             await ctx.send("No champs were found or there was an error in the process.")
             print(e)
