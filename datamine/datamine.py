@@ -1,5 +1,5 @@
 from redbot.core import commands, Config
-from Levenshtein import distance
+from fuzzywuzzy import process
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -15,9 +15,10 @@ class Datamine(BaseCog):
             },
             "current": {
                 "portraits": {
-                    "nightcrawler": "https://drive.google.com/open?id=1PydQ78Mx8uUvJ2S4noBo4A8T2RCgLKVt",
-                    "kamala khan": "https://drive.google.com/open?id=1xeeOdtx6ybeOgKshIZvMGRPQ2o8B3kcc",
-                    "blade": "https://drive.google.com/open?id=1-P1X5kSW4RpqtIMZ1ko6euA1Clp-Uihz"
+                    "nightcrawler": "https://lh3.googleusercontent.com/1bEKNK3utJXk9ETIyds2epX9OUSdH2OHVjzv0y6AXOHv0zI2YrtAs6DKai-1svdYGkyUIJGqGW3kw62JJYI=w1366-h626",
+                    "kamala khan": "https://lh4.googleusercontent.com/Gvq_ic16FoVAS4l9EjSE239kHDhyrrgw9EBRybh-V9izJOvovCtZ3SV1QPg0q8XHPGUzlLNuqGRZatCsgr4=w1366-h626",
+                    "blade": "https://lh3.googleusercontent.com/KRT7jg99wBhYJDsbMzgPl0kezlF1QJV4-6tZm3S14oiSID14K-rpAbVDz8BLd66KafjuD7rjp-u8L3EOPLc=w1366-h626",
+
                 }
             }
         }
@@ -36,15 +37,11 @@ class Datamine(BaseCog):
     async def portrait(self, ctx, *, search):
         all_keys = await self.config.current.get_raw('portraits')
         all_keys = all_keys.keys()
-        distance_list = []
-        for x in all_keys:
-            distance_list.append(distance(search, x))
-        best = min(distance_list)
-        position = distance_list.index(best)
-        key = list(all_keys)[position]
+        
+        results = process.extractOne(search, list(all_keys))
         try:
-            link = await self.config.current.portraits.get_raw(key)
-            await ctx.send(link)
+            link = await self.config.current.portraits.get_raw(results[0])
+            await ctx.send(link + "\n\nScore: " + results[1])
         except Exception as e:
             await ctx.send("No champs were found or there was an error in the process.")
             print(e)
