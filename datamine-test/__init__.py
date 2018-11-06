@@ -1,4 +1,4 @@
 from .datamine_test import Datamine_test
 
-def setip(bot):
+def setup(bot):
     bot.add_cog(Datamine_test(bot))
