@@ -52,7 +52,7 @@ class Datamine(BaseCog):
     async def search(self, ctx, id):
         await ctx.send("Searching for ability...this may take a while...")
         path = bundled_data_path(self)
-        with open(bundled_data_path(self), 'r') as read_file:
+        with open(bundled_data_path(self) + "\en\bcg_stat_en.bytes", 'r') as read_file:
             data = json.load(read_file)
         data = data['strings']
         for x in data:
