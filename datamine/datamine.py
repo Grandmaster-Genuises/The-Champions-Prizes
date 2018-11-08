@@ -1,6 +1,7 @@
 from redbot.core import commands, Config
 from fuzzywuzzy import process
 import json
+from redbot.core.data_manager import bundled_data_path
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -50,7 +51,8 @@ class Datamine(BaseCog):
     @datamine.command()
     async def search(self, ctx, id):
         await ctx.send("Searching for ability...this may take a while...")
-        with open('en/en/bcg_stat_en.bytes', 'r') as read_file:
+        path = bundled_data_path(self.bot)
+        with open(bundled_data_path(self.bot), 'r') as read_file:
             data = json.load(read_file)
         data = data['strings']
         for x in data:
