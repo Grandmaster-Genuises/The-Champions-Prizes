@@ -48,14 +48,39 @@ class Datamine(BaseCog):
             await ctx.send("No champs were found or there was an error in the process.")
             print(e)
 
-    @datamine.command()
-    async def search(self, ctx, id):
-        await ctx.send("Searching for ability...this may take a while...")
-        path = bundled_data_path(self)
+    @datamine.group()
+    async def search(self, ctx):
+        pass
+
+    @search.command()
+    async def ability(self, ctx, id):
+        await ctx.send("Searching for ability... this may take a while...")
         with open(str(bundled_data_path(self)) + "/en/bcg_stat_en.bytes", 'r') as read_file:
             data = json.load(read_file)
         data = data['strings']
         for x in data:
             if x['k'] == id:
-                await ctx.send(x['v'])
+                await ctx.send("```" + x['v'] + "```")
                 return
+
+    @search.command()
+    async def bio(self, ctx, id):
+        await ctx.send("Searching for champion bio... this may take a while")
+        with open(str(bundled_data_path(self)) + "/en/character_bios_en.bytes", 'r') as read_file:
+            data = json.load(read_file)
+        data = data['strings']
+        name_list = []
+        for x in data:
+            name_list.append(x['k'][18:])
+        
+        results = process.extractOne(id, name_list)
+        if results[0] != "BLADE":
+            result = 'ID_CHARACTER_BIOS_' + results[0]
+        else:
+            result = "ID_CHARACER_BIOS_" + results[0]
+        
+        for x in data:
+            if x['k'] == result:
+                await ctx.send("```" + x['v'] + "```")
+                return
+        
