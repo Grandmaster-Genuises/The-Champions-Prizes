@@ -1,5 +1,6 @@
 from redbot.core import commands, Config
 from fuzzywuzzy import process
+import json
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -45,3 +46,14 @@ class Datamine(BaseCog):
         except Exception as e:
             await ctx.send("No champs were found or there was an error in the process.")
             print(e)
+
+    @datamine.command()
+    async def search(self, ctx, id):
+        await ctx.send("Searching for ability...this may take a while...")
+        with open('en-20181108T142112Z-001/bcg_stat_en.bytes', 'r') as read_file:
+            data = json.load(read_file)
+        data = data['strings']
+        for x in data:
+            if x['k'] == id:
+                await ctx.send(x['v'])
+                return
